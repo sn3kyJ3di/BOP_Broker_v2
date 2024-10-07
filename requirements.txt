@@ -1,0 +1,14 @@
+appdirs==1.4.4
+certifi==2024.8.30
+charset-normalizer==3.3.2
+flexcache==0.3
+flexparser==0.3.1
+idna==3.9
+logging==0.4.9.6
+numpy==2.1.2
+Pint==0.24.3
+python-dotenv==1.0.1
+pytz==2024.2
+requests==2.32.3
+typing_extensions==4.12.2
+urllib3==2.2.3
