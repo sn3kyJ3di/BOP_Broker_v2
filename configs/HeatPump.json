@@ -1,0 +1,56 @@
+{
+  "equipment_name": "HeatPump",
+  "device_ip": "10.168.15.15",
+  "points": [
+    {
+      "bop_point": "heaPum_reaFloSup_y",
+      "ecy_point": "HeatPmpFlow",
+      "object_type": "AnalogValue",
+      "unit": "cubic_meter_per_second",
+      "si_unit": "cubic_meter_per_second",
+      "us_unit": "US_liquid_gallon/min",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "heaPum_reaPHeaPum_y",
+      "ecy_point": "HeatPmpPwr",
+      "object_type": "AnalogValue",
+      "unit": "watts",
+      "si_unit": "watts",
+      "us_unit": "watts",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "heaPum_reaPHeaPum_y",
+      "ecy_point": "HwPmpPwr",
+      "object_type": "AnalogValue",
+      "unit": "watts",
+      "si_unit": "watts",
+      "us_unit": "watts",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "heaPum_reaTRet_y",
+      "ecy_point": "HwEntTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "heaPum_reaTSup_y",
+      "ecy_point": "HwLvgTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    }
+  ]
+}

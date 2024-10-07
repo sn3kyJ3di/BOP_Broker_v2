@@ -1,0 +1,139 @@
+{
+  "equipment_name": "AHU",
+  "device_ip": "10.168.15.12",
+  "points": [
+    {
+      "bop_point": "weaSta_reaWeaTDryBul_y",
+      "ecy_point": "OutdoorAirTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "weaSta_reaWeaRelHum_y",
+      "ecy_point": "OutdoorAirHumidity",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "percent",
+      "us_unit": "percent",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_V_flow_sup_y",
+      "ecy_point": "SupplyAirFlow",
+      "object_type": "AnalogInput",
+      "unit": "m**3/s",
+      "si_unit": "m**3/s",
+      "us_unit": "ft**3/min",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_TSup_y",
+      "ecy_point": "DischAirTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_TRet_y",
+      "ecy_point": "RetAirTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_TMix_y",
+      "ecy_point": "MixedAirTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_dp_sup_y",
+      "ecy_point": "DischAirPress",
+      "object_type": "AnalogInput",
+      "unit": "pascal",
+      "si_unit": "pascal",
+      "us_unit": "inH2O",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_oveAhu_yFan_u",
+      "bop_override_point": "hvac_oveAhu_yFan_activate",
+      "ecy_point": "DischFanSpeed",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_oveAhu_yOA_u",
+      "bop_override_point": "hvac_oveAhu_yOA_activate",
+      "ecy_point": "OutdoorAirDamper",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_oveAhu_yRet_u",
+      "bop_override_point": "hvac_oveAhu_yRet_activate",
+      "ecy_point": "ReturnAirDamper",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_oveAhu_yCoo_u",
+      "bop_override_point": "hvac_oveAhu_yCoo_activate",
+      "ecy_point": "CoolingValve",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_oveAhu_yHea_u",
+      "bop_override_point": "hvac_oveAhu_yHea_activate",
+      "ecy_point": "HeatingValve",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_reaAhu_PFanSup_y",
+      "ecy_point": "DischFanStatus",
+      "object_type": "BinaryInput",
+      "threshold": 0.5,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_PPumHea_y",
+      "ecy_point": "HeatingPumpStatus",
+      "object_type": "BinaryInput",
+      "threshold": 3,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_PPumCoo_y",
+      "ecy_point": "CoolingPumpStatus",
+      "object_type": "BinaryInput",
+      "threshold": 3,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_oveAhu_yPumCoo_u",
+      "bop_override_point": "hvac_oveAhu_yPumCoo_activate",
+      "ecy_point": "CoolingPumpCmd",
+      "object_type": "BinaryOutput"
+    },
+    {
+      "bop_point": "hvac_oveAhu_yPumHea_u",
+      "bop_override_point": "hvac_oveAhu_yPumHea_activate",
+      "ecy_point": "HeatingPumpCmd",
+      "object_type": "BinaryOutput"
+    }
+  ]
+}
