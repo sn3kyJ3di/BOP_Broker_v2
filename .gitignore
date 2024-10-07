@@ -97,3 +97,9 @@ venv/
 ENV/
 env/
 .venv/
+
+# workspaces
+*.code-workspace
+
+# DS_Store
+*.DS_Store
