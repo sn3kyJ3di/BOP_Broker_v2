@@ -1,5 +1,3 @@
-# points/analog_output_point.py
-
 import logging
 from typing import Any, Dict, Optional
 from .base_point import Point
@@ -61,25 +59,6 @@ class AnalogOutputPoint(Point):
         # Initialize current value by fetching present-value from ECY
         self.current_value = self.fetch_present_value()
 
-    def fetch_present_value(self) -> Optional[float]:
-        """
-        Fetches the present-value from the ECY endpoint.
-
-        Returns:
-            Optional[float]: The present-value in the device's native units if available, else None.
-        """
-        logging.debug(f"Fetching present-value for point '{self.object_name}' from ECY.")
-
-        # Define the property to fetch: "present-value"
-        property_name = "present-value"
-        present_value = self.ecy_client.get_property_value(
-            object_type=self.object_type,
-            object_instance=self.object_instance,
-            property_name=property_name
-        )
-        logging.debug(f"Fetched present-value for point '{self.object_name}': {present_value}")
-        return present_value  # Can be None
-
     def process_bop_value(self, bop_value: float, metadata: Dict[str, Any]) -> None:
         """
         Processes the BOPTest value and updates the point's value.
@@ -99,6 +78,15 @@ class AnalogOutputPoint(Point):
             self.pending_sync = True
         else:
             logging.debug(f"Point '{self.object_name}' value remains unchanged at {self.current_value}.")
+
+    def has_pending_sync(self) -> bool:
+        """
+        Determines if there are pending synchronization tasks.
+
+        Returns:
+            bool: True if there's a pending sync, False otherwise.
+        """
+        return self.pending_sync
 
     def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
         """
@@ -128,6 +116,25 @@ class AnalogOutputPoint(Point):
         logging.debug(f"Prepared batch request for AnalogOutputPoint '{self.object_name}': {batch_request}")
 
         return {"requests": [batch_request]}
+
+    def fetch_present_value(self) -> Optional[float]:
+        """
+        Fetches the present-value from the ECY endpoint.
+
+        Returns:
+            Optional[float]: The present-value in the device's native units if available, else None.
+        """
+        logging.debug(f"Fetching present-value for point '{self.object_name}' from ECY.")
+
+        # Define the property to fetch: "present-value"
+        property_name = "present-value"
+        present_value = self.ecy_client.get_property_value(
+            object_type=self.object_type,
+            object_instance=self.object_instance,
+            property_name=property_name
+        )
+        logging.debug(f"Fetched present-value for point '{self.object_name}': {present_value}")
+        return present_value  # Can be None
 
     def get_object_type_kebab(self) -> str:
         """
@@ -181,12 +188,3 @@ class AnalogOutputPoint(Point):
         normalized = percentage / 100.0
         logging.debug(f"Normalized value for point '{self.object_name}': {normalized}")
         return normalized
-
-    def has_pending_sync(self) -> bool:
-        """
-        Determines if there are pending synchronization tasks.
-
-        Returns:
-            bool: True if there's a pending sync, False otherwise.
-        """
-        return self.pending_sync

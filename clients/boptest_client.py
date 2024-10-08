@@ -37,7 +37,6 @@ class BOPTestClient:
         """Initialize the system with the specified start time and warmup period."""
         url = f"{self.base_url}/initialize"
         data = {"start_time": start_time, "warmup_period": warmup_period}
-        print(data)
 
         try:
             response = requests.put(url, json=data)

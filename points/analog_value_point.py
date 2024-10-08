@@ -1,10 +1,7 @@
-# points/analog_value_point.py
-
 import logging
 from typing import Any, Dict
 from .base_point import Point
 from utils.unit_conversion import UnitConverter
-
 
 class AnalogValuePoint(Point):
     def __init__(

@@ -434,11 +434,13 @@ Represents individual points (sensors, setpoints, actuators, commands) with meth
 
 ### Unit Conversion Utilities (`unit_conversion.py`)
 
-Provides functions for converting units from SI to US customary units.
+Provides functions for converting units to and from SI to US customary units.
 
-- **Function**: `convert(value, unit)`
-  - Converts the input `value` based on the specified `unit`.
-  - Supports temperature (`K` to `F`), pressure (`Pa` to `InWC`), and others as needed.
+- **Methods**: 
+- `convert(value, from_unit, to_unit)`
+  - Converts a value from one unit to another.
+- `list_units()`
+  - Prints all available units in the UnitRegistry.
 - **Usage**:
   - Used in point classes within `process_bop_value` when `convert_to_us` is set to `True`.
 
@@ -448,9 +450,7 @@ Provides functions for converting units from SI to US customary units.
 
 - **Adding New Equipment**:
   - Create a new configuration file in the `configs/` directory.
-  - Define equipment name, device IP, and point mappings.
-- **Implementing New Point Types**:
-  - Create a new point class in the `points/` directory, inheriting from `Point`.
+  - Define equipment name, device IP, and point mappings. Point mappings need to match BOP Points and ECY Points.
   - Implement the necessary methods, especially `process_bop_value`.
 - **Expanding Unit Conversions**:
   - Add new conversion cases in `unit_conversion.py` for additional units.

@@ -1,5 +1,3 @@
-# points/binary_input_point.py
-
 import logging
 from typing import Any, Dict
 from .base_point import Point

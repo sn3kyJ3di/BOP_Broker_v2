@@ -1,5 +1,3 @@
-# points/binary_output_point.py
-
 import logging
 from typing import Any, Dict, Optional
 from .base_point import Point
@@ -61,6 +59,73 @@ class BinaryOutputPoint(Point):
         # Initialize current value by fetching present-value from ECY
         self.current_value = self.fetch_present_value()
 
+    def process_bop_value(self, bop_value: float, metadata: Dict[str, Any]) -> None:
+        """
+        Processes the BOPTest value and updates the point's value.
+
+        Args:
+            bop_value (float): The value received from BOPTest (expected to be 0 or 1).
+            metadata (Dict[str, Any]): Additional metadata (optional).
+        """
+        logging.debug(f"Processing BOPTest value for point '{self.object_name}': {bop_value}")
+
+        # Validate bop_value is binary (0 or 1)
+        if bop_value not in [0, 1]:
+            logging.error(f"Invalid BOPTest value for '{self.object_name}': {bop_value}. Expected 0 or 1.")
+            return
+
+        # Convert bop_value to boolean
+        new_value = bool(bop_value)
+
+        # Update the point's value
+        previous_value = self.value
+        self.value = new_value
+
+        if previous_value != self.value:
+            logging.info(f"Point '{self.object_name}' value updated from {previous_value} to {self.value}. Marked for synchronization.")
+            self.pending_sync = True
+        else:
+            logging.debug(f"Point '{self.object_name}' value remains unchanged at {self.value}.")
+
+    def has_pending_sync(self) -> bool:
+        """
+        Determines if there are pending synchronization tasks.
+
+        Returns:
+            bool: True if there's a pending sync, False otherwise.
+        """
+        logging.debug(f"Checking pending_sync for BinaryOutputPoint '{self.object_name}': {self.pending_sync}")
+        return self.pending_sync
+    
+    def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
+        """
+        Prepares the batch request payload for this BinaryOutputPoint.
+
+        Returns:
+            Optional[Dict[str, Any]]: The batch request payload or None if not applicable.
+        """
+        if not self.pending_sync or self.object_instance is None:
+            logging.debug(f"No batch request needed for BinaryOutputPoint '{self.object_name}'.")
+            return None
+
+        # Construct the API endpoint URL
+        object_type_kebab = self.get_object_type_kebab()
+        url = f"/api/rest/v2/services/bacnet/local/objects/{object_type_kebab}/{self.object_instance}"
+
+        # Prepare the batch request payload
+        batch_request = {
+            "id": f"{self.object_name}_present_value",
+            "method": "POST",
+            "url": url,
+            "body": {
+                "present-value": self.value  # True or False
+            }
+        }
+
+        logging.debug(f"Prepared batch request for BinaryOutputPoint '{self.object_name}': {batch_request}")
+
+        return {"requests": [batch_request]}
+    
     def fetch_present_value(self) -> Optional[bool]:
         """
         Fetches the present-value from the ECY endpoint and maps it to a boolean.
@@ -110,63 +175,6 @@ class BinaryOutputPoint(Point):
         logging.debug(f"Mapped present-value '{present_value}' to BOPTest value '{mapped_value}' for '{self.object_name}'.")
         return mapped_value
 
-    def process_bop_value(self, bop_value: float, metadata: Dict[str, Any]) -> None:
-        """
-        Processes the BOPTest value and updates the point's value.
-
-        Args:
-            bop_value (float): The value received from BOPTest (expected to be 0 or 1).
-            metadata (Dict[str, Any]): Additional metadata (optional).
-        """
-        logging.debug(f"Processing BOPTest value for point '{self.object_name}': {bop_value}")
-
-        # Validate bop_value is binary (0 or 1)
-        if bop_value not in [0, 1]:
-            logging.error(f"Invalid BOPTest value for '{self.object_name}': {bop_value}. Expected 0 or 1.")
-            return
-
-        # Convert bop_value to boolean
-        new_value = bool(bop_value)
-
-        # Update the point's value
-        previous_value = self.value
-        self.value = new_value
-
-        if previous_value != self.value:
-            logging.info(f"Point '{self.object_name}' value updated from {previous_value} to {self.value}. Marked for synchronization.")
-            self.pending_sync = True
-        else:
-            logging.debug(f"Point '{self.object_name}' value remains unchanged at {self.value}.")
-
-    def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
-        """
-        Prepares the batch request payload for this BinaryOutputPoint.
-
-        Returns:
-            Optional[Dict[str, Any]]: The batch request payload or None if not applicable.
-        """
-        if not self.pending_sync or self.object_instance is None:
-            logging.debug(f"No batch request needed for BinaryOutputPoint '{self.object_name}'.")
-            return None
-
-        # Construct the API endpoint URL
-        object_type_kebab = self.get_object_type_kebab()
-        url = f"/api/rest/v2/services/bacnet/local/objects/{object_type_kebab}/{self.object_instance}"
-
-        # Prepare the batch request payload
-        batch_request = {
-            "id": f"{self.object_name}_present_value",
-            "method": "POST",
-            "url": url,
-            "body": {
-                "present-value": self.value  # True or False
-            }
-        }
-
-        logging.debug(f"Prepared batch request for BinaryOutputPoint '{self.object_name}': {batch_request}")
-
-        return {"requests": [batch_request]}
-
     def get_object_type_kebab(self) -> str:
         """
         Converts the object type to its kebab-case plural form as required by the API.
@@ -201,16 +209,6 @@ class BinaryOutputPoint(Point):
 
         logging.debug(f"Prepared BOPTest data for BinaryOutputPoint '{self.object_name}': {boptest_data}")
         return boptest_data
-
-    def has_pending_sync(self) -> bool:
-        """
-        Determines if there are pending synchronization tasks.
-
-        Returns:
-            bool: True if there's a pending sync, False otherwise.
-        """
-        logging.debug(f"Checking pending_sync for BinaryOutputPoint '{self.object_name}': {self.pending_sync}")
-        return self.pending_sync
 
     def synchronize(self) -> Dict[str, Any]:
         """
