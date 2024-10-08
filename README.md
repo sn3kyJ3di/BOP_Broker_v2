@@ -325,7 +325,9 @@ The `main.py` script orchestrates the simulation and synchronization processes.
 
 - **Environment Setup**: Loads necessary environment variables and verifies their presence.
 - **Initialization**:
+- Initializes the `UnitConverter` for getting the right data units in and out.
   - Initializes the `BOPTestClient` for interacting with the simulation.
+  - Synchronizes the time and timezone of the model to the ECY Clients.
   - Initializes the `EquipmentManager`, which in turn initializes `ECYDeviceClient` instances for each equipment configuration file created by the user.
   - Loads equipment and point configurations.
 - **Simulation Loop**:
@@ -347,10 +349,12 @@ The `main.py` script orchestrates the simulation and synchronization processes.
 Handles communication with the BOPTest simulation server.
 
 - **Methods**:
+  - `__init____()`: Initialize the client with the server IP and port.
   - `get_metadata()`: Fetches input and measurement metadata from the server and combines them.
   - `initialize_system(start_time, warmup_period)`: Initializes the simulation environment.
   - `set_step_time(step_time)`: Sets the time increment for simulation steps.
-  - `advance_simulation()`: Advances the simulation by one step. 
+  - `advance_simulation(control_inputs)`: Advances the simulation by one step.
+  - `get_kpis()`: Fetches the models KPIs.
 
 ---
 
@@ -369,16 +373,31 @@ Handles communication with ECY devices via REST API.
   - Uses the `batch` endpoint to read and write multiple values in a single HTTP request.
   - Values read are the ones from the JSON file and what was found during initialization.
   - Handles special cases, such as setting `outOfService` for input objects before writing.
-
+- **Methods**:
+  - `__init____()`: Initialize the client with the server IP and port.
+  - `disable_ntp()`: Turns off auto NTP
+  - `set_time_and_timezone( timezone, unix_time)`: Sets the time and timezone of the ECYs to match the model
+  - `get_existing_endpoints()`: Fetches the ECY devices existing Endpoints for Matching to BOPtest Endpoints using the config files
+  - `get_instance_number( object_name, object_type)`: Fetches the ECY devices object's instance number
+  - `get_property_value(object_name, object_type, property_name)`: Fetches the ECY devices object's values
+  - `read_values_from_endpoints(points)`: Reads the current values of specified points from the ECY device, List of point instances to read, Dictionary mapping point names to their current values.
+  - `write_values_from_endpoints(batch_payload)`: Writes multiple point values to the ECY device using batch requests.
+  - `send_batch_request(points)`: Sends a batch API request to the ECY device with retry logic.
+  - `set_out_of_service(object_type, instance_number, out_of_service)`: Sets the out-of-service status for a specific object on the ECY device.
 ---
 
 ### Equipment Manager (`equipment_manager.py`)
 
-Manages the loading and initialization of equipment and their associated points.
+Manages equipment configurations and associated points.
+Handles loading configurations and initializing point instances.
 
 - **Methods**:
   - `load_equipments()`: Loads equipment configurations from the `configs/` directory.
   - `initialize_equipment(equipment_config)`: Initializes `ECYDeviceClient` and point instances for each equipment.
+  - `get_all_ecy_clients()`: Retrieves all ECYDeviceClient instances managed by this EquipmentManager.
+  - `get_pending_points_by_ecy_client()`: Retrieves all points that are pending synchronization, grouped by their ECYDeviceClient.
+  - `get_ecy_client_points_mapping()`: Retrieves a mapping of ECY device IP addresses to their associated points.
+  - `synchronize_time_and_timezone(start_time_unix, timezone)`: Synchronizes the time and timezone between the BOPTest client and all ECY clients.
 - **Attributes**:
   - `equipment`: A dictionary containing equipment data, including `ecy_client` instances and point lists.
 
@@ -390,13 +409,19 @@ Represents individual points (sensors, setpoints, actuators, commands) with meth
 
 - **Base Class (`base_point.py`)**:
   - Defines common attributes and methods shared among all point types.
-- **Analog Value (`analog_value_point.py`)**:  
-  - `BinaryValuePoint` 
-  - `AnalogInputPoint` 
-  - `BinaryInputPoint` 
-  - `AnalogOutputPoint` 
-  - `BinaryOutputPoint`
-  - **Methods**:
+- **Analog Value (`analog_value_point.py`)**:
+  - Initializes an AnalogValuePoint instance.
+- **Binary Value (`binary_value_point.py`)**:
+  - Initializes a BinaryValuePoint instance. 
+- **Analog Output (`analog_output_point.py`)**: 
+  - Initializes a AnalogOutputPoint instance. 
+- **Binary Output (`binary_output_point.py`)**:
+  - Initializes a BinaryOutputPoint instance.  
+- **Analog Input (`analog_input_point.py`)**:
+  - Initializes an AnalogInputPoint instance. 
+- **Binary Input (`binary_input_point.py`)**:
+  - Initializes an BinaryInputPoint instance.  
+- **Methods**:
     - `process_bop_value(bop_value, metadata)`: Processes the raw value from the simulation, including unit conversion.
     - `sync_with_ecy()`: Previously used for individual synchronization; now batch writing is used.
 - **Attributes**:
