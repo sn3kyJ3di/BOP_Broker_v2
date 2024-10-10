@@ -39,7 +39,7 @@ ecy_username = os.getenv('ECY2_LOGIN_USERNAME')
 ecy_password = os.getenv('ECY2_LOGIN_PWORD')
 unit_system = os.getenv('UNIT_SYSTEM', 'SI').upper()
 log_file = os.getenv('LOG_FILE', 'app.log')       
-desired_timezone = os.getenv('DESIRED_TIMEZONE', 'UTC')
+desired_timezone = os.getenv('DESIRED_TIMEZONE')  # Removed default value
 
 # Verify required environment variables
 required_env_vars = {
@@ -51,8 +51,8 @@ required_env_vars = {
     'ECY2_LOGIN_USERNAME': ecy_username,
     'ECY2_LOGIN_PWORD': ecy_password,
     'UNIT_SYSTEM': unit_system,
-    'LOG_FILE': log_file,
-    'DESIRED_TIMEZONE': desired_timezone
+    'LOG_FILE': log_file
+    # 'DESIRED_TIMEZONE' is now optional and removed from required variables
 }
 
 missing_vars = [var for var, value in required_env_vars.items() if not value]
@@ -83,30 +83,36 @@ else:
 # Initialize UnitConverter
 unit_converter = UnitConverter()
 
-# **Convert Human-Readable Start Time to Unix Timestamp with Timezone Awareness**
+# **Convert Human-Readable Start Time to Unix Timestamp**
 try:
     # Define the expected format. Adjust if necessary.
     # Example format: '2023-07-06 14:00:00'
     start_time_naive = datetime.strptime(start_time_str, '%Y-%m-%d %H:%M:%S')
 
-    # Assign the desired timezone
-    try:
-        desired_tz = ZoneInfo(desired_timezone)
-    except Exception as e:
-        logging.error(f"Invalid 'DESIRED_TIMEZONE': {desired_timezone}. Error: {e}")
-        exit(1)
+    if desired_timezone:
+        # Assign the desired timezone
+        try:
+            desired_tz = ZoneInfo(desired_timezone)
+        except Exception as e:
+            logging.error(f"Invalid 'DESIRED_TIMEZONE': {desired_timezone}. Error: {e}")
+            exit(1)
 
-    # Make the datetime object timezone-aware
-    if 'zoneinfo' in sys.modules:
-        # Using zoneinfo
-        start_time_dt = start_time_naive.replace(tzinfo=desired_tz)
+        # Make the datetime object timezone-aware
+        if 'zoneinfo' in sys.modules:
+            # Using zoneinfo
+            start_time_dt = start_time_naive.replace(tzinfo=desired_tz)
+        else:
+            # Using pytz
+            start_time_dt = desired_tz.localize(start_time_naive)
+
+        # Convert to Unix timestamp
+        start_time_unix = int(start_time_dt.timestamp())
+        logging.debug(f"Converted 'BOP_START_TIME' from '{start_time_str}' ({desired_timezone}) to Unix time: {start_time_unix}")
     else:
-        # Using pytz
-        start_time_dt = desired_tz.localize(start_time_naive)
-
-    # Convert to Unix timestamp
-    start_time_unix = int(start_time_dt.timestamp())
-    logging.debug(f"Converted 'BOP_START_TIME' from '{start_time_str}' ({desired_timezone}) to Unix time: {start_time_unix}")
+        # If no timezone is provided, assume UTC or handle accordingly
+        start_time_dt = start_time_naive.replace(tzinfo=ZoneInfo('UTC'))
+        start_time_unix = int(start_time_dt.timestamp())
+        logging.debug(f"No 'DESIRED_TIMEZONE' provided. Converted 'BOP_START_TIME' from '{start_time_str}' (UTC) to Unix time: {start_time_unix}")
 
 except ValueError as e:
     logging.error(f"Invalid 'BOP_START_TIME' format: {start_time_str}. Expected format 'YYYY-MM-DD HH:MM:SS'. Error: {e}")
@@ -144,20 +150,17 @@ equipment_manager = EquipmentManager(
 )
 equipment_manager.load_equipments()
 
-# **Added Debug Statement Before Synchronization**
-logging.debug("Invoking synchronize_time_and_timezone function.")
-
-try:
-    logging.debug(f"Converted 'BOP_START_TIME' to integer Unix time: {start_time_unix}")
-except ValueError:
-    logging.error(f"Invalid 'BOP_START_TIME' value: {start_time_unix}. It must be an integer representing Unix time.")
-    exit(1)
-
-# **Modify the synchronize_time_and_timezone Function Call**
-# Assuming that the synchronize_time_and_timezone function needs both Unix time and timezone-aware datetime
-# If it only needs Unix time and timezone string, adjust accordingly.
-
-equipment_manager.synchronize_time_and_timezone(start_time_unix=start_time_unix, timezone=desired_timezone)
+# **Conditional Synchronization of Time and Timezone**
+if desired_timezone:
+    logging.debug("Desired timezone provided. Synchronizing time and timezone with EquipmentManager.")
+    try:
+        equipment_manager.synchronize_time_and_timezone(start_time_unix=start_time_unix, timezone=desired_timezone)
+        logging.info("Time and timezone synchronized successfully.")
+    except Exception as e:
+        logging.error(f"Failed to synchronize time and timezone: {e}")
+        exit(1)
+else:
+    logging.info("No 'DESIRED_TIMEZONE' provided. Skipping time and timezone synchronization.")
 
 def simulation_loop(
     bop_client: BOPTestClient,
