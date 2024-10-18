@@ -132,13 +132,13 @@ Create a `.env` file in the project root or export the following environment var
 **Example `.env` File:**
 
 ```env
-BOP_SERVER_IP = '10.168.16.203'
+BOP_SERVER_IP = 'XXX.XXX.XXX.XXX'
 BOP_SERVER_PORT = '5000'
 BOP_START_TIME = '2023-07-06 14:00:00'
 BOP_WARMUP_PERIOD = '0'
 BOP_STEP_TIME = '1'
-ECY2_LOGIN_USERNAME = 'nv_vis'
-ECY2_LOGIN_PWORD = 'p55FBTws+cvujL:'
+ECY2_LOGIN_USERNAME = '{USERNAME}'
+ECY2_LOGIN_PWORD = '{PASSWORD}'
 UNIT_SYSTEM = 'US'
 LOG_FILE = 'app.log'
 DESIRED_TIMEZONE = 'US/Mountain'
