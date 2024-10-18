@@ -1,0 +1,58 @@
+{
+  "equipment_name": "SouthZone",
+  "device_ip": "10.168.15.10",
+  "points": [
+    {
+      "bop_point": "hvac_reaZonSou_TSup_y",
+      "ecy_point": "DischargeTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaZonSou_V_flow_y",
+      "ecy_point": "ActFlow",
+      "object_type": "AnalogValue",
+      "unit": "cubic_meter_per_second",
+      "si_unit": "cubic_meter_per_second",
+      "us_unit": "cubic_foot_per_minute",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaZonSou_TZon_y",
+      "ecy_point": "SpaceTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaZonSou_CO2Zon_y",
+      "ecy_point": "CO2Sensor",
+      "object_type": "AnalogValue",
+      "unit": "ppm",
+      "si_unit": "ppm",
+      "us_unit": "ppm",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_oveZonActSou_yReaHea_u",
+      "bop_override_point": "hvac_oveZonActSou_yReaHea_activate",
+      "ecy_point": "Reheat1",
+      "object_type": "AnalogOutput"
+    },
+    {
+      "bop_point": "hvac_oveZonActSou_yDam_u",
+      "bop_override_point": "hvac_oveZonActSou_yDam_activate",
+      "ecy_point": "VAV Actuator Command",
+      "object_type": "AnalogOutput"
+    }
+  ]
+}
