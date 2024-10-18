@@ -1,4 +1,4 @@
-# Project Title: BOPTest ECY Device Integration
+# BOPTest ECY Device Integration
 
 ## Overview
 
