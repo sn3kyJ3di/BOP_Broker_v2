@@ -26,9 +26,9 @@
       "bop_point": "hvac_reaAhu_V_flow_sup_y",
       "ecy_point": "SupplyAirFlow",
       "object_type": "AnalogInput",
-      "unit": "m**3/s",
-      "si_unit": "m**3/s",
-      "us_unit": "ft**3/min",
+      "unit": "cubic_meter_per_second",
+      "si_unit": "cubic_meter_per_second",
+      "us_unit": "cubic_foot_per_minute",
       "convert_to_us": true,
       "priority": 14
     },
