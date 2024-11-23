@@ -63,3 +63,4 @@ logs/
 *.tar.gz
 *.tgz
 *.zip
+.env
