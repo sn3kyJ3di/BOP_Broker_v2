@@ -8,11 +8,29 @@ class BOPTestClient:
     def __init__(self, server_ip, server_port):
         """Initialize the client with the server IP and port."""
         self.base_url = f"http://{server_ip}:{server_port}"
+        self.testid = None
+
+    def select_test_case(self, testcase_name):
+        """Select a test case and retrieve the testid."""
+        url = f"{self.base_url}/testcases/{testcase_name}/select"
+        try:
+            response = requests.post(url)
+            response.raise_for_status()
+            self.testid = response.json().get("testid")
+            logging.info(f"Test case '{testcase_name}' selected with testid: {self.testid}")
+            return True
+        except requests.RequestException as e:
+            logging.error(f"Error selecting test case: {e}")
+            return False
 
     def get_metadata(self):
         """Fetch input and measurement metadata from the server and combine them."""
-        inputs_url = f"{self.base_url}/inputs"
-        measurements_url = f"{self.base_url}/measurements"
+        if not self.testid:
+            logging.error("Test case not selected. Please select a test case first.")
+            return {}
+
+        inputs_url = f"{self.base_url}/inputs/{self.testid}"
+        measurements_url = f"{self.base_url}/measurements/{self.testid}"
 
         try:
             inputs_response = requests.get(inputs_url)
@@ -24,7 +42,6 @@ class BOPTestClient:
             inputs_payload = inputs_response.json().get("payload", {})
             measurements_payload = measurements_response.json().get("payload", {})
 
-            # Combine input and measurement metadata
             combined_metadata = {**inputs_payload, **measurements_payload}
             logging.info("Metadata fetched successfully.")
             return combined_metadata
@@ -35,7 +52,11 @@ class BOPTestClient:
 
     def initialize_system(self, start_time, warmup_period):
         """Initialize the system with the specified start time and warmup period."""
-        url = f"{self.base_url}/initialize"
+        if not self.testid:
+            logging.error("Test case not selected. Please select a test case first.")
+            return False, {}
+
+        url = f"{self.base_url}/initialize/{self.testid}"
         data = {"start_time": start_time, "warmup_period": warmup_period}
 
         try:
@@ -49,7 +70,11 @@ class BOPTestClient:
 
     def set_step_time(self, step_time):
         """Set the simulation step time in seconds."""
-        url = f"{self.base_url}/step"
+        if not self.testid:
+            logging.error("Test case not selected. Please select a test case first.")
+            return False, {}
+
+        url = f"{self.base_url}/step/{self.testid}"
         data = {"step": step_time}
 
         try:
@@ -62,23 +87,15 @@ class BOPTestClient:
             return False, {}
 
     def advance_simulation(self, control_inputs=None):
-        """
-        Advance the simulation by one step, optionally providing control inputs.
+        """Advance the simulation by one step, optionally providing control inputs."""
+        if not self.testid:
+            logging.error("Test case not selected. Please select a test case first.")
+            return False, {}
 
-        Args:
-            control_inputs (dict, optional): Dictionary containing control inputs to send to BOPTest.
-                                            Defaults to None.
-
-        Returns:
-            tuple: (success: bool, response_data: dict)
-                - success: True if the simulation was advanced successfully, False otherwise.
-                - response_data: The JSON response from the server if successful, else an empty dict.
-        """
-        url = f"{self.base_url}/advance"
+        url = f"{self.base_url}/advance/{self.testid}"
         if control_inputs is None:
             control_inputs = {}
 
-        # Serialize and log the payload being sent
         try:
             payload_str = json.dumps(control_inputs, indent=2)
             logging.debug(f"Sending POST request to {url} with payload:\n{payload_str}")
@@ -88,50 +105,40 @@ class BOPTestClient:
 
         try:
             response = requests.post(url, json=control_inputs, headers={"Content-Type": "application/json"})
-            response.raise_for_status()  # Raises HTTPError for bad responses (4xx or 5xx)
+            response.raise_for_status()
             
-            # Log the successful response
             try:
                 response_json = response.json()
                 response_pretty = json.dumps(response_json, indent=2)
                 logging.debug(f"Received successful response from {url}:\n{response_pretty}")
             except ValueError:
-                # Response is not JSON
                 logging.debug(f"Received non-JSON response from {url}:\n{response.text}")
 
             logging.info("Simulation advanced successfully.")
             return True, response_json if 'response_json' in locals() else {}
         
         except requests.exceptions.HTTPError as e:
-            # Log detailed error information
             logging.error(f"Error advancing simulation: {e}")
-            
             if response.content:
                 try:
                     response_json = response.json()
                     response_pretty = json.dumps(response_json, indent=2)
                     logging.error(f"Response content from {url}:\n{response_pretty}")
                 except ValueError:
-                    # Response content is not JSON
                     logging.error(f"Response content from {url} is not valid JSON:\n{response.content}")
-            
             return False, {}
         
         except requests.exceptions.RequestException as e:
-            # Catch all other request-related errors
             logging.error(f"RequestException while advancing simulation: {e}")
             return False, {}
-        
-    def get_kpis(self):
-        """
-        Retrieve KPI values from the /kpi endpoint.
 
-        Returns:
-            tuple: (success: bool, kpis: dict)
-                - success: True if KPIs were retrieved successfully, False otherwise.
-                - kpis: The KPI data if successful, else an empty dict.
-        """
-        url = f"{self.base_url}/kpi"
+    def get_kpis(self):
+        """Retrieve KPI values from the /kpi endpoint."""
+        if not self.testid:
+            logging.error("Test case not selected. Please select a test case first.")
+            return False, {}
+
+        url = f"{self.base_url}/kpi/{self.testid}"
 
         try:
             logging.debug(f"Fetching KPIs from {url}")

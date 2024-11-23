@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  bop-broker:
+    build: .
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+    ports:
+      - "8080:80"
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - BOP_SERVER_IP=${BOP_SERVER_IP}
+      - BOP_SERVER_PORT=${BOP_SERVER_PORT}
+      - BOP_START_TIME=${BOP_START_TIME}
+      - BOP_WARMUP_PERIOD=${BOP_WARMUP_PERIOD}
+      - BOP_STEP_TIME=${BOP_STEP_TIME}
+      - ECY2_LOGIN_USERNAME=${ECY2_LOGIN_USERNAME}
+      - ECY2_LOGIN_PWORD=${ECY2_LOGIN_PWORD}
+      - UNIT_SYSTEM=${UNIT_SYSTEM}
+      - LOG_FILE=${LOG_FILE}
+      - TESTCASE_NAME=${TESTCASE_NAME}
+      - DESIRED_TIMEZONE=${DESIRED_TIMEZONE:-}
+    networks:
+      - boptest-network
+
+networks:
+  boptest-network:
+    driver: bridge

@@ -1,0 +1,146 @@
+{
+  "equipment_name": "Chiller",
+  "device_ip": "10.168.15.16",
+  "points": [
+    {
+      "bop_point": "chi_reaFloSup_y",
+      "ecy_point": "ChwFlow",
+      "object_type": "AnalogValue",
+      "unit": "cubic_meter_per_second",
+      "si_unit": "cubic_meter_per_second",
+      "us_unit": "US_liquid_gallon/min",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "chi_reaPChi_y",
+      "ecy_point": "ChillerPwr",
+      "object_type": "AnalogValue",
+      "unit": "watts",
+      "si_unit": "watts",
+      "us_unit": "watts",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "chi_reaPPumDis_y",
+      "ecy_point": "ChwPmpPwr",
+      "object_type": "AnalogValue",
+      "unit": "watts",
+      "si_unit": "watts",
+      "us_unit": "watts",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "chi_reaTRet_y",
+      "ecy_point": "ChwEntTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "chi_reaTSup_y",
+      "ecy_point": "ChwLvgTemp",
+      "object_type": "AnalogValue",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "cost_tot",
+      "ecy_point": "Cost",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "cost_tot",
+      "ecy_point": "Emissions",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "ener_tot",
+      "ecy_point": "Energy",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "pele_tot",
+      "ecy_point": "PeakElecDemand",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "pgas_tot",
+      "ecy_point": "PeakGasDemand",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "pdih_tot",
+      "ecy_point": "PeakDistrictHeatDemand",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "idis_tot",
+      "ecy_point": "IAQ_Discomfort",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "tdis_tot",
+      "ecy_point": "ThermalDiscomfort",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    },
+    {
+      "bop_point": "time_rat",
+      "ecy_point": "CompTimeRatio",
+      "object_type": "AnalogValue",
+      "unit": "dimensionless",
+      "si_unit": "dimensionless",
+      "us_unit": "dimensionless",
+      "convert_to_us": false,
+      "priority": 14
+    }
+  ]
+}

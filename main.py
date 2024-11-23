@@ -32,6 +32,7 @@ load_dotenv()
 # Load environment variables
 server_ip = os.getenv('BOP_SERVER_IP')
 server_port = os.getenv('BOP_SERVER_PORT')
+testcase_name = os.getenv('TESTCASE_NAME')
 start_time_str = os.getenv('BOP_START_TIME')
 warmup_period = os.getenv('BOP_WARMUP_PERIOD')
 step_time = os.getenv('BOP_STEP_TIME')
@@ -45,6 +46,7 @@ desired_timezone = os.getenv('DESIRED_TIMEZONE')  # Removed default value
 required_env_vars = {
     'BOP_SERVER_IP': server_ip,
     'BOP_SERVER_PORT': server_port,
+    'TESTCASE_NAME': testcase_name,
     'BOP_START_TIME': start_time_str,
     'BOP_WARMUP_PERIOD': warmup_period,
     'BOP_STEP_TIME': step_time,
@@ -126,6 +128,13 @@ bop_client = BOPTestClient(
     server_ip=server_ip,
     server_port=int(server_port)
 )
+
+# First, select the test case
+success = bop_client.select_test_case(testcase_name)
+if not success:
+    logging.error(f"Failed to select test case '{testcase_name}'. Exiting...")
+    exit(1)
+logging.info(f"Successfully selected test case: {testcase_name}")
 
 # Initialize BOPTest with start time and warmup period
 success, init_response = bop_client.initialize_system(start_time_unix, warmup_period)

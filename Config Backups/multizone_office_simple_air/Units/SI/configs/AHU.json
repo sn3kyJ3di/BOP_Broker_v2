@@ -9,7 +9,7 @@
       "unit": "K",
       "si_unit": "degC",
       "us_unit": "degF",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -19,7 +19,7 @@
       "unit": "dimensionless",
       "si_unit": "percent",
       "us_unit": "percent",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -29,7 +29,7 @@
       "unit": "m**3/s",
       "si_unit": "m**3/s",
       "us_unit": "ft**3/min",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -39,7 +39,7 @@
       "unit": "K",
       "si_unit": "degC",
       "us_unit": "degF",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -49,7 +49,7 @@
       "unit": "K",
       "si_unit": "degC",
       "us_unit": "degF",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -59,7 +59,7 @@
       "unit": "K",
       "si_unit": "degC",
       "us_unit": "degF",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
@@ -69,7 +69,7 @@
       "unit": "pascal",
       "si_unit": "pascal",
       "us_unit": "inH2O",
-      "convert_to_us": true,
+      "convert_to_us": false,
       "priority": 14
     },
     {
