@@ -5,8 +5,6 @@ from .base_point import Point
 class AnalogOutputPoint(Point):
     OBJECT_TYPE_MAPPING = {
         "AnalogOutput": "analog-outputs",
-        "AnalogInput": "analog-inputs",
-        "AnalogValue": "analog-values",
         # Add other mappings as necessary
     }
 
@@ -78,44 +76,6 @@ class AnalogOutputPoint(Point):
             self.pending_sync = True
         else:
             logging.debug(f"Point '{self.object_name}' value remains unchanged at {self.current_value}.")
-
-    def has_pending_sync(self) -> bool:
-        """
-        Determines if there are pending synchronization tasks.
-
-        Returns:
-            bool: True if there's a pending sync, False otherwise.
-        """
-        return self.pending_sync
-
-    def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
-        """
-        Prepares batch requests for ECY to write the updated value.
-
-        Returns:
-            Optional[Dict[str, Any]]: The batch request payload or None if not applicable.
-        """
-        if not self.pending_sync or self.object_instance is None:
-            logging.debug(f"No batch request needed for AnalogOutputPoint '{self.object_name}'.")
-            return None
-
-        # Construct the API endpoint URL
-        object_type_kebab = self.get_object_type_kebab()
-        url = f"/api/rest/v2/services/bacnet/local/objects/{object_type_kebab}/{self.object_instance}"
-
-        # Prepare the batch request payload
-        batch_request = {
-            "id": f"{self.object_name}_present_value",
-            "method": "POST",
-            "url": url,
-            "body": {
-                "present-value": self.current_value
-            }
-        }
-
-        logging.debug(f"Prepared batch request for AnalogOutputPoint '{self.object_name}': {batch_request}")
-
-        return {"requests": [batch_request]}
 
     def fetch_present_value(self) -> Optional[float]:
         """

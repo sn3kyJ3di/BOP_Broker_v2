@@ -6,6 +6,7 @@ import threading
 import time
 import json
 import sys
+import requests
 
 try:
     from zoneinfo import ZoneInfo  # For Python 3.9+
@@ -121,6 +122,18 @@ except ValueError as e:
     exit(1)
 except Exception as e:
     logging.error(f"An unexpected error occurred while processing 'BOP_START_TIME': {e}")
+    exit(1)
+
+# Add this near the start of main.py
+logging.info(f"Attempting to connect to BOP server at {server_ip}:{server_port}")
+
+# Test connection before proceeding
+try:
+    response = requests.get(f"http://{server_ip}:{server_port}", timeout=5)
+    response.raise_for_status()
+    logging.info("Successfully connected to BOP server")
+except requests.RequestException as e:
+    logging.error(f"Failed to connect to BOP server: {e}")
     exit(1)
 
 # Initialize BOPTestClient

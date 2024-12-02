@@ -14,11 +14,15 @@ class BOPTestClient:
         """Select a test case and retrieve the testid."""
         url = f"{self.base_url}/testcases/{testcase_name}/select"
         try:
-            response = requests.post(url)
+            # Add timeout parameter
+            response = requests.post(url, timeout=10)  # 10 seconds timeout
             response.raise_for_status()
             self.testid = response.json().get("testid")
             logging.info(f"Test case '{testcase_name}' selected with testid: {self.testid}")
             return True
+        except requests.Timeout:
+            logging.error(f"Timeout while connecting to {url}")
+            return False
         except requests.RequestException as e:
             logging.error(f"Error selecting test case: {e}")
             return False
