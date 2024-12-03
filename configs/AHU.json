@@ -33,6 +33,46 @@
       "priority": 14
     },
     {
+      "bop_point": "hvac_reaAhu_THeaCoiSup_y",
+      "ecy_point": "HtgCoilEntTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_THeaCoiRet_y",
+      "ecy_point": "HtgCoilLvgTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_TCooCoiSup_y",
+      "ecy_point": "ClgCoilEntTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
+      "bop_point": "hvac_reaAhu_TCooCoiRet_y",
+      "ecy_point": "ClgCoilLvgTemp",
+      "object_type": "AnalogInput",
+      "unit": "K",
+      "si_unit": "degC",
+      "us_unit": "degF",
+      "convert_to_us": true,
+      "priority": 14
+    },
+    {
       "bop_point": "hvac_reaAhu_TSup_y",
       "ecy_point": "DischAirTemp",
       "object_type": "AnalogInput",
