@@ -77,6 +77,18 @@ class AnalogOutputPoint(Point):
         else:
             logging.debug(f"Point '{self.object_name}' value remains unchanged at {self.current_value}.")
 
+    def has_pending_sync(self) -> bool:
+        """
+        Implementation of abstract method - always returns False since we don't sync back to ECY
+        """
+        return False
+
+    def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
+        """
+        Implementation of abstract method - always returns None since we don't write to ECY
+        """
+        return None
+    
     def fetch_present_value(self) -> Optional[float]:
         """
         Fetches the present-value from the ECY endpoint.

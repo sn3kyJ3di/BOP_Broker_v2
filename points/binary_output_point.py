@@ -5,8 +5,6 @@ from .base_point import Point
 class BinaryOutputPoint(Point):
     OBJECT_TYPE_MAPPING = {
         "BinaryOutput": "binary-outputs",
-        "BinaryInput": "binary-inputs",
-        "BinaryValue": "binary-values",
         # Add other mappings as necessary
     }
 
@@ -89,42 +87,15 @@ class BinaryOutputPoint(Point):
 
     def has_pending_sync(self) -> bool:
         """
-        Determines if there are pending synchronization tasks.
-
-        Returns:
-            bool: True if there's a pending sync, False otherwise.
+        Implementation of abstract method - always returns False since we don't sync back to ECY
         """
-        logging.debug(f"Checking pending_sync for BinaryOutputPoint '{self.object_name}': {self.pending_sync}")
-        return self.pending_sync
-    
+        return False
+
     def prepare_batch_request(self) -> Optional[Dict[str, Any]]:
         """
-        Prepares the batch request payload for this BinaryOutputPoint.
-
-        Returns:
-            Optional[Dict[str, Any]]: The batch request payload or None if not applicable.
+        Implementation of abstract method - always returns None since we don't write to ECY
         """
-        if not self.pending_sync or self.object_instance is None:
-            logging.debug(f"No batch request needed for BinaryOutputPoint '{self.object_name}'.")
-            return None
-
-        # Construct the API endpoint URL
-        object_type_kebab = self.get_object_type_kebab()
-        url = f"/api/rest/v2/services/bacnet/local/objects/{object_type_kebab}/{self.object_instance}"
-
-        # Prepare the batch request payload
-        batch_request = {
-            "id": f"{self.object_name}_present_value",
-            "method": "POST",
-            "url": url,
-            "body": {
-                "present-value": self.value  # True or False
-            }
-        }
-
-        logging.debug(f"Prepared batch request for BinaryOutputPoint '{self.object_name}': {batch_request}")
-
-        return {"requests": [batch_request]}
+        return None
     
     def fetch_present_value(self) -> Optional[bool]:
         """
